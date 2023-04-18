@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Todo } from "./Todo";
 import { TodoType } from "./types/Todo";
+import { Text } from "./Text";
+import { UserProfile } from "./UserProfile";
 
 export default function App() {
   const [todos, setTodos] = useState<Array<TodoType>>([]);
@@ -14,8 +16,15 @@ export default function App() {
       });
   };
 
+  const user = {
+    name: "テスト",
+    hobbies: ["テスト1", "テスト2"],
+  };
+
   return (
     <div className="App">
+      <Text color="red" fontSize="19px" />
+      <UserProfile user={user} />
       <button onClick={onClickFetchData}>データ取得</button>
       {todos.map((todo) => (
         <p>
