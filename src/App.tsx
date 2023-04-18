@@ -3,30 +3,46 @@ import React, { useState } from "react";
 import { Todo } from "./Todo";
 import { TodoType } from "./types/Todo";
 import { Text } from "./Text";
-import { UserProfile } from "./UserProfile";
+// import { UserProfile } from "./UserProfile";
+import { UserCard } from "./components/UserCard";
+import { User } from "./types/api/user";
+import { UserProfile } from "./types/userProfile";
+import { useAllUsers } from "./hooks/useAllUsers";
 
 export default function App() {
-  const [todos, setTodos] = useState<Array<TodoType>>([]);
+  const { getUsers, userProfiles, loading, error } = useAllUsers();
 
-  const onClickFetchData = () => {
-    axios
-      .get<Array<TodoType>>("https://jsonplaceholder.typicode.com/todos")
-      .then((result) => {
-        setTodos(result.data);
-      });
-  };
+  const onClickFetchUser = () => getUsers();
 
-  const user = {
-    name: "テスト",
-    hobbies: ["テスト1", "テスト2"],
-  };
+  //   const user = {
+  //     name: "テスト",
+  //     hobbies: ["テスト1", "テスト2"],
+  //   };
+
+  //   const user = {
+  //     id: 1,
+  //     name: "テスト",
+  //     email: "test",
+  //     address: "test",
+  //   };
 
   return (
     <div className="App">
       <Text color="red" fontSize="19px" />
-      <UserProfile user={user} />
-      <button onClick={onClickFetchData}>データ取得</button>
-      {todos.map((todo) => (
+      {error ? (
+        <p>データの取得に失敗</p>
+      ) : loading ? (
+        <p>Loading..</p>
+      ) : (
+        <>
+          {userProfiles.map((user) => {
+            <UserCard key={user.id} user={user} />;
+          })}
+        </>
+      )}
+      {/* <UserProfile user={user} /> */}
+      <button onClick={onClickFetchUser}>データ取得</button>
+      {/* {todos.map((todo) => (
         <p>
           <Todo
             key={todo.id}
@@ -35,7 +51,7 @@ export default function App() {
             completed={todo.completed}
           />
         </p>
-      ))}
+      ))} */}
     </div>
   );
 }
